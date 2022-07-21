@@ -1,6 +1,5 @@
 view: sample_json {
-  sql_table_name: `nll_cx_looker.sample_json`
-    ;;
+  sql_table_name: `nll_cx_looker.sample_json`;;
 
   dimension: insert_id {
     type: string
