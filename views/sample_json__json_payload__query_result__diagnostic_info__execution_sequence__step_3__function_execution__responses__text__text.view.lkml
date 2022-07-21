@@ -1,0 +1,6 @@
+view: sample_json__json_payload__query_result__diagnostic_info__execution_sequence__step_3__function_execution__responses__text__text {
+  dimension: sample_json__json_payload__query_result__diagnostic_info__execution_sequence__step_3__function_execution__responses__text__text {
+    type: string
+    sql: sample_json__json_payload__query_result__diagnostic_info__execution_sequence__step_3__function_execution__responses__text__text ;;
+  }
+}
