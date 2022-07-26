@@ -62,7 +62,6 @@ view: step_flow_page {
   }
 
   dimension: sample_json_insert_id {
-    primary_key: yes
     type: string
     sql: ${TABLE}.sample_json_insert_id ;;
   }
