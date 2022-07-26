@@ -7,6 +7,7 @@ view: sample_json__json_payload__query_result__diagnostic_info__execution_sequen
   }
 
   dimension: step_1__initial_state__flow_state__flow_id {
+    # count number flow ids_count
     type: string
     sql: ${TABLE}.Step_1.InitialState.FlowState.FlowId ;;
     group_label: "Step 1 Initial State Flow State"
