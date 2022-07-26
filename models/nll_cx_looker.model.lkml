@@ -119,3 +119,5 @@ explore: sample_json {
     relationship: one_to_many
   }
 }
+
+explore: step_flow_page {}

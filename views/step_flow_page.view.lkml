@@ -62,6 +62,7 @@ view: step_flow_page {
   }
 
   dimension: sample_json_insert_id {
+    primary_key: yes
     type: string
     sql: ${TABLE}.sample_json_insert_id ;;
   }
@@ -89,6 +90,16 @@ view: step_flow_page {
   dimension: page_name {
     type: string
     sql: ${TABLE}.page_name ;;
+  }
+
+  measure: flow_count {
+    type: count_distinct
+    sql: ${flow_id} ;;
+  }
+
+  measure: page_count {
+    type: count_distinct
+    sql: ${page_id} ;;
   }
 
   set: detail {
