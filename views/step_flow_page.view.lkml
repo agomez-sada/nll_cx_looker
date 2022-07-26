@@ -92,11 +92,13 @@ view: step_flow_page {
     sql: ${TABLE}.page_name ;;
   }
 
+ # insert_id (session) and Flow_id --> concatenate unique
   measure: flow_count {
     type: count_distinct
     sql: ${flow_id} ;;
   }
 
+ # page_id (session) and Flow_id --> concatenate unique
   measure: page_count {
     type: count_distinct
     sql: ${page_id} ;;
