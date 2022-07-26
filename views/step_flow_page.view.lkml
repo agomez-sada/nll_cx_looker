@@ -110,13 +110,13 @@ view: step_flow_page {
 # insert_id (session) and Flow_id --> concatenate unique
   measure: flow_count {
     type: count_distinct
-    sql: ${flow_id} ;;
+    sql: ${dk_flow_id_insert_id} ;;
   }
 
  # page_id (session) and Flow_id --> concatenate unique
   measure: page_count {
     type: count_distinct
-    sql: ${page_id} ;;
+    sql: ${dk_page_id_insert_id} ;;
   }
 
   set: detail {
