@@ -1,8 +1,9 @@
 view: step_flow_page {
   derived_table: {
     sql: SELECT
+          sample_json.labels.session_id  AS session_id,
           (FORMAT_TIMESTAMP('%F %T', sample_json.timestamp , 'America/Chicago')) AS timestamp_time,
-          sample_json.insertId  AS sample_json_insert_id, 'Step 1' AS Step,
+          sample_json.insertId  AS insert_id, 'Step 1' AS Step,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_1.InitialState.FlowState.FlowId  AS flow_id,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_1.InitialState.FlowState.Name  AS flow_name,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_1.InitialState.FlowState.PageState.PageId  AS page_id,
@@ -11,8 +12,9 @@ view: step_flow_page {
       LEFT JOIN UNNEST(sample_json.jsonPayload.queryResult.diagnosticInfo.Execution_Sequence) as sample_json__json_payload__query_result__diagnostic_info__execution_sequence
       UNION ALL
       SELECT
+          sample_json.labels.session_id  AS session_id,
           (FORMAT_TIMESTAMP('%F %T', sample_json.timestamp , 'America/Chicago')) AS timestamp_time,
-          sample_json.insertId  AS sample_json_insert_id, 'Step 2' AS Step,
+          sample_json.insertId  AS insert_id, 'Step 2' AS Step,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_2.StateMachine.FlowState.FlowId  AS flow_id,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_2.StateMachine.FlowState.Name  AS flow_name,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_2.StateMachine.FlowState.PageState.PageId AS page_id,
@@ -21,8 +23,9 @@ view: step_flow_page {
       LEFT JOIN UNNEST(sample_json.jsonPayload.queryResult.diagnosticInfo.Execution_Sequence) as sample_json__json_payload__query_result__diagnostic_info__execution_sequence
       UNION ALL
       SELECT
+          sample_json.labels.session_id  AS session_id,
           (FORMAT_TIMESTAMP('%F %T', sample_json.timestamp , 'America/Chicago')) AS timestamp_time,
-          sample_json.insertId  AS sample_json_insert_id, 'Step 3' AS Step,
+          sample_json.insertId  AS insert_id, 'Step 3' AS Step,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_3.StateMachine.FlowState.FlowId  AS flow_id,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_3.StateMachine.FlowState.Name  AS flow_name,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_3.StateMachine.FlowState.PageState.PageId AS page_id,
@@ -31,8 +34,9 @@ view: step_flow_page {
       LEFT JOIN UNNEST(sample_json.jsonPayload.queryResult.diagnosticInfo.Execution_Sequence) as sample_json__json_payload__query_result__diagnostic_info__execution_sequence
       UNION ALL
       SELECT
+          sample_json.labels.session_id  AS session_id,
           (FORMAT_TIMESTAMP('%F %T', sample_json.timestamp , 'America/Chicago')) AS timestamp_time,
-          sample_json.insertId  AS sample_json_insert_id, 'Step 4' AS Step,
+          sample_json.insertId  AS insert_id, 'Step 4' AS Step,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_4.StateMachine.FlowState.FlowId  AS flow_id,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_4.StateMachine.FlowState.Name  AS flow_name,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_4.StateMachine.FlowState.PageState.PageId  AS page_id,
@@ -41,8 +45,9 @@ view: step_flow_page {
       LEFT JOIN UNNEST(sample_json.jsonPayload.queryResult.diagnosticInfo.Execution_Sequence) as sample_json__json_payload__query_result__diagnostic_info__execution_sequence
       UNION ALL
       SELECT
+          sample_json.labels.session_id  AS session_id,
           (FORMAT_TIMESTAMP('%F %T', sample_json.timestamp , 'America/Chicago')) AS timestamp_time,
-          sample_json.insertId  AS sample_json_insert_id, 'Step 5' AS Step,
+          sample_json.insertId  AS insert_id, 'Step 5' AS Step,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_5.StateMachine.FlowState.FlowId  AS flow_id,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_5.StateMachine.FlowState.Name  AS flow_name,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_5.StateMachine.FlowState.PageState.PageId  AS page_id,
@@ -51,8 +56,9 @@ view: step_flow_page {
       LEFT JOIN UNNEST(sample_json.jsonPayload.queryResult.diagnosticInfo.Execution_Sequence) as sample_json__json_payload__query_result__diagnostic_info__execution_sequence
       UNION ALL
       SELECT
+          sample_json.labels.session_id  AS session_id,
           (FORMAT_TIMESTAMP('%F %T', sample_json.timestamp , 'America/Chicago')) AS timestamp_time,
-          sample_json.insertId  AS sample_json_insert_id, 'Step 6' AS Step,
+          sample_json.insertId  AS insert_id, 'Step 6' AS Step,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_6.StateMachine.FlowState.FlowId  AS flow_id,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_6.StateMachine.FlowState.Name  AS flow_name,
           sample_json__json_payload__query_result__diagnostic_info__execution_sequence.Step_6.StateMachine.FlowState.PageState.PageId  AS page_id,
@@ -67,9 +73,14 @@ view: step_flow_page {
     drill_fields: [detail*]
   }
 
-  dimension: sample_json_insert_id {
+  dimension: session_id {
     type: string
-    sql: ${TABLE}.sample_json_insert_id ;;
+    sql: ${TABLE}.session_id ;;
+  }
+
+  dimension: insert_id {
+    type: string
+    sql: ${TABLE}.insert_id ;;
   }
 
   dimension: step {
@@ -97,31 +108,34 @@ view: step_flow_page {
     sql: ${TABLE}.page_name ;;
   }
 
-  dimension: dk_flow_id_insert_id{
+  # Within a conversation how many times a particular flow is invoked?
+  # Use → SessionID + InsertID + FlowID
+  dimension: dk_session_id_insert_id_flow_id{
     type: string
-    sql:  CONCAT(${flow_id},${sample_json_insert_id}) ;;
+    sql:  CONCAT(${session_id},${insert_id},${flow_id}) ;;
   }
 
-  dimension: dk_page_id_insert_id{
+  # Across all the conversation how many conversations invoked a contact agent?
+  # Use Session Level → not include InsertID
+  dimension: dk_session_id_flow_id {
     type: string
-    sql:  CONCAT(${page_id},${sample_json_insert_id}) ;;
+    sql: CONCAT(${session_id},${flow_id}} ;;
   }
 
-# insert_id (session) and Flow_id --> concatenate unique
-  measure: flow_count {
+  measure: flow_count_distinct {
     type: count_distinct
-    sql: ${dk_flow_id_insert_id} ;;
+    sql: ${dk_session_id_insert_id_flow_id} ;;
   }
 
- # page_id (session) and Flow_id --> concatenate unique
-  measure: page_count {
-    type: count_distinct
-    sql: ${dk_page_id_insert_id} ;;
-  }
+
+  # measure: flow_name_count {
+  #   type: count_distinct
+  #   sql:  ;;
+  # }
 
   set: detail {
     fields: [
-      sample_json_insert_id,
+      insert_id,
       step,
       flow_id,
       flow_name,

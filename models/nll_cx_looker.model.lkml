@@ -118,6 +118,12 @@ explore: sample_json {
     sql: LEFT JOIN UNNEST(${sample_json__json_payload__query_result__diagnostic_info__execution_sequence__step_2__function_execution__responses.text__redacted_text}) as sample_json__json_payload__query_result__diagnostic_info__execution_sequence__step_2__function_execution__responses__text__redacted_text ;;
     relationship: one_to_many
   }
+
+  # join: step_flow_page  {
+  #   view_label: "step_flow_page"
+  #   sql: LEFT JOIN ${step_flow_page.sample_json_insert_id} ;;
+  #   relationship: one_to_many
+  # }
 }
 
 explore: step_flow_page {}
