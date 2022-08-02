@@ -122,16 +122,18 @@ view: step_flow_page {
     sql: CONCAT(${session_id},${flow_id}} ;;
   }
 
-  measure: flow_count_distinct {
+  measure: distinct_flow_count {
     type: count_distinct
     sql: ${dk_session_id_insert_id_flow_id} ;;
   }
 
 
-  # measure: flow_name_count {
-  #   type: count_distinct
-  #   sql:  ;;
-  # }
+  measure: total_flow_count {
+    type: count_distinct
+    sql: ${dk_session_id_flow_id} ;;
+  }
+
+  # same logic for pages
 
   set: detail {
     fields: [
